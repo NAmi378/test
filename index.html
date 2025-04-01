@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEIT 관심도 테스트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f9f9f9;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question, .result {
+      display: none;
+      margin-top: 20px;
+    }
+    .active {
+      display: block;
+    }
+    button {
+      padding: 12px 18px;
+      margin: 10px 0;
+      font-size: 1rem;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      background-color: #005BAC;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004080;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      background: white;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    a {
+      text-decoration: none;
+      color: #005BAC;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+      button {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>KEIT랑 나, 얼마나 친할까?</h1>
+  <div id="start">
+    <p>몇 가지 질문을 통해 확인해보세요!</p>
+    <button onclick="startQuiz()">테스트 시작</button>
+  </div>
+
+  <div id="quiz">
+    <div class="question" data-score="1">
+      <p>Q1. KEIT는 어떤 일을 하나요?</p>
+      <button onclick="nextQuestion(1)">R&D 자금 지원을 한다</button><br />
+      <button onclick="nextQuestion(0)">정부 조직이다</button><br />
+      <button onclick="nextQuestion(0)">모른다</button>
+    </div>
+    <div class="question" data-score="1">
+      <p>Q2. KEIT 콘텐츠를 본 적 있나요?</p>
+      <button onclick="nextQuestion(1)">네, 유튜브나 인스타에서 봤어요</button><br />
+      <button onclick="nextQuestion(0)">아니요, 본 적 없어요</button>
+    </div>
+    <div class="question" data-score="1">
+      <p>Q3. KEIT의 지원을 받은 기업을 알고 있나요?</p>
+      <button onclick="nextQuestion(1)">네, 알고 있어요</button><br />
+      <button onclick="nextQuestion(0)">잘 모르겠어요</button>
+    </div>
+  </div>
+
+  <div id="result" class="result">
+    <h2 id="result-title"></h2>
+    <p id="result-message"></p>
+    <div id="recommendations"></div>
+  </div>
+
+  <script>
+    let currentQuestion = 0;
+    let score = 0;
+    const questions = document.querySelectorAll(".question");
+
+    function startQuiz() {
+      document.getElementById("start").style.display = "none";
+      questions[currentQuestion].classList.add("active");
+    }
+
+    function nextQuestion(points) {
+      score += points;
+      questions[currentQuestion].classList.remove("active");
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        questions[currentQuestion].classList.add("active");
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("result").classList.add("active");
+      let title = "";
+      let message = "";
+      let rec = "";
+
+      if (score <= 1) {
+        title = "우린 아직 어색한 사이 😅";
+        message = "KEIT가 생소하시군요! 이 콘텐츠부터 시작해보세요.";
+        rec = `
+          <ul>
+            <li><a href="https://www.youtube.com/@official_keit" target="_blank">[입문영상] KEIT가 뭐하는 곳인지 2분 요약</a></li>
+            <li><a href="https://www.instagram.com/official_keit" target="_blank">[카드뉴스] 정부 R&D 지원이란?</a></li>
+            <li><a href="https://pf.kakao.com/_yxlIqs" target="_blank">[카카오톡] KEIT 친구 추가하고 더 알아보기</a></li>
+          </ul>`;
+      } else if (score == 2) {
+        title = "우린 이제 아는 사이 🙂";
+        message = "조금 익숙해졌네요! 이런 콘텐츠는 어떠세요?";
+        rec = `
+          <ul>
+            <li><a href="https://www.youtube.com/@official_keit" target="_blank">[기업 사례] 우리가 키운 기술들</a></li>
+            <li><a href="https://www.instagram.com/official_keit" target="_blank">[영상] 일상 속 KEIT 기술 찾기</a></li>
+            <li><a href="https://pf.kakao.com/_yxlIqs" target="_blank">[카카오톡] 더 많은 이야기 받아보기</a></li>
+          </ul>`;
+      } else {
+        title = "우린 찐친 😎";
+        message = "KEIT에 대한 이해도가 높으시네요! 더 깊이 있는 콘텐츠도 추천드려요.";
+        rec = `
+          <ul>
+            <li><a href="https://www.youtube.com/@official_keit" target="_blank">[전문가 인터뷰] 기술이 바꾸는 미래</a></li>
+            <li><a href="https://www.instagram.com/official_keit" target="_blank">[비하인드 콘텐츠] 정책 기획 과정 엿보기</a></li>
+            <li><a href="https://pf.kakao.com/_yxlIqs" target="_blank">[뉴스레터] KEIT 인사이트 받아보기</a></li>
+          </ul>`;
+      }
+
+      document.getElementById("result-title").innerText = title;
+      document.getElementById("result-message").innerText = message;
+      document.getElementById("recommendations").innerHTML = rec;
+    }
+  </script>
+</body>
+</html>
